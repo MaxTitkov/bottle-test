@@ -1,5 +1,6 @@
 from bottle import view, run, route, static_file
 from datetime import datetime as dt
+import os
 
 @route("/static/css/<filename>")
 def send_css(filename):
@@ -22,4 +23,7 @@ def mainpage():
 def curr_date():
 	return {"date": dt.now().isoformat()}
 
-run(host='localhost', port=8080, debug=True)
+if os.environ.get('APP_LOCATION') == 'heroku':
+    run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+else:
+    run(host='localhost', port=8080, debug=True)
